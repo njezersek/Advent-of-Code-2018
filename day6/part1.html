@@ -1,0 +1,124 @@
+<script type="input/text" id="input">67, 191
+215, 237
+130, 233
+244, 61
+93, 93
+145, 351
+254, 146
+260, 278
+177, 117
+89, 291
+313, 108
+145, 161
+143, 304
+329, 139
+153, 357
+217, 156
+139, 247
+304, 63
+202, 344
+140, 302
+233, 127
+260, 251
+235, 46
+357, 336
+302, 284
+313, 260
+135, 40
+95, 57
+227, 202
+277, 126
+163, 99
+232, 271
+130, 158
+72, 289
+89, 66
+94, 111
+210, 184
+139, 58
+99, 272
+322, 148
+209, 111
+170, 244
+230, 348
+112, 200
+287, 55
+320, 270
+53, 219
+42, 52
+313, 205
+166, 259</script>
+<script type="input/text" id="example">1, 1
+1, 6
+8, 3
+3, 4
+5, 5
+8, 9</script>
+<script>
+	let input = document.getElementById("input").innerHTML.split("\n");
+	input = input.map(a => a.split(", "));
+	let abc = "abcdefghijklnopqrstuvwxyz";
+	let grid;
+	let maxx = 0;
+	let maxy = 0;
+	for(i of input){
+		if(Number(i[0]) > maxx)maxx = Number(i[0]);
+		if(Number(i[1]) > maxy)maxy = Number(i[1]);
+	}
+	maxx++;
+	maxy++;
+	let areas, infiniteAreas;
+	function calc(){
+		areas = new Array(input.length).fill(0);
+		infiniteAreas = new Array(input.length).fill(false);
+		grid = [];
+		for(let x = 0; x < maxx; x++){
+			grid[x] = [];
+			for(let y = 0; y < maxy; y++){
+				let label = ".";
+				let ds = new Array(input.length).fill(0);
+				for(i in input){
+					let d = Math.abs(Number(input[i][0]) - x) + Math.abs(Number(input[i][1]) - y);
+					ds[i] = d;
+				}
+				let mind = Math.min(...ds);
+				if(ds.indexOf(mind) == ds.lastIndexOf(mind)){
+					label = abc[ds.indexOf(mind)%abc.length];
+					areas[ds.indexOf(mind)]++;
+					if(x == maxx-1 || x == 0 || y == maxy-1 || y == 0)infiniteAreas[ds.indexOf(mind)] = true;
+				}
+				for(i in input){
+					if(input[i][0] == x && input[i][1] == y)label = abc[i%abc.length].toUpperCase();
+				}
+				grid[x][y] = label;
+			}
+		}
+		
+		let maxarea = 0;
+		let index = -1;
+		for(a in areas){
+			if(maxarea < areas[a] && !infiniteAreas[a]){
+				maxarea = areas[a];
+				index = a;
+			}
+		}
+		
+		console.log(maxarea);
+	}
+	
+	
+	function display(){
+		let out = "<pre>";
+		for(let y = 0; y < maxy; y++){
+			for(let x = 0; x < maxx; x++){
+				out += grid[x][y];
+			}
+			out += "\n";
+		}
+		
+		out += "</pre>";
+		document.body.innerHTML = out;
+	}
+	
+	calc();
+</script>
