@@ -1,0 +1,36 @@
+<script>
+  let players = new Array(464).fill(0);
+  let player = 0;
+  let end = 71730;
+
+  let marbles = [0];
+  let current = 0;
+  let counter = 0;
+
+  function place(){
+    counter++;
+    if(counter%23 == 0){
+      players[player]+=counter;
+      let index = (marbles.length+current-7)%marbles.length;
+      players[player]+=marbles.splice(index, 1)[0];
+      current = index;
+    }
+    else{
+      let index = (current+1)%marbles.length+1;
+      marbles.splice(index, 0, counter);
+      current = index;
+    }
+
+    //console.log(marbles, current)
+
+    player = (player+1)%players.length;
+  }
+
+  for(let i = 0; i < end; i++){
+    place();
+  }
+
+  let result = Math.max(...players);
+
+  console.log(result);
+</script>
