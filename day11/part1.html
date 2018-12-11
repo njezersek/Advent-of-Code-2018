@@ -1,0 +1,41 @@
+<script>
+  let input = 5235;
+  let grid = [];
+
+  for(let i=0; i<300; i++){
+    for(let j=0; j<300; j++){
+      let x = i+1;
+      let y = j+1;
+      let rackID = x+10;
+      let power = rackID * y;
+      power += input;
+      power *= rackID;
+      power = Math.floor(power/100)%10;
+      power -= 5;
+
+      if(grid[i] == undefined)grid[i] = [];
+      grid[i][j] = power;
+    }
+  }
+
+  let maxPower = 0;
+  let x = 0;
+  let y = 0;
+  for(let i=0; i<300-3; i++){
+    for(let j=0; j<300-3; j++){
+      let power = 0;
+      for(let ii=0; ii<3; ii++){
+        for(let jj=0; jj<3; jj++){
+          power+=grid[i+ii][j+jj];
+        }
+      }
+      if(power > maxPower){
+        maxPower = power;
+        x = i+1;
+        y = j+1;
+      }
+    }
+  }
+
+  console.log(x,y,maxPower);
+</script>
