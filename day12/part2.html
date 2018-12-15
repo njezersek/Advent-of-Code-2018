@@ -1,0 +1,89 @@
+<script type="text/input" id="initial-state">#.#..#.##.#..#.#..##.######...####.........#..##...####.#.###......#.#.##..#.#.###.#..#.#.####....##</script>
+<script type="text/input" id="rules">.#### => .
+.###. => .
+#.... => .
+##### => .
+..### => #
+####. => #
+..#.. => .
+###.# => .
+..##. => .
+#.##. => #
+#.#.. => .
+##... => .
+..#.# => #
+#.### => #
+.#..# => .
+#...# => #
+.##.# => #
+.#.#. => #
+#..#. => #
+###.. => #
+...#. => .
+.#.## => #
+.##.. => .
+#..## => .
+##.## => .
+.#... => #
+#.#.# => .
+##..# => .
+....# => .
+..... => .
+...## => #
+##.#. => .</script>
+
+<canvas id="display"></canvas>
+
+<script>
+	let rules = document.getElementById("rules").innerHTML.split("\n").map(a => a.split(" => "));
+	let initial_state = document.getElementById("initial-state").innerHTML;
+	let pad = initial_state.length;
+  let iterateTo = 300;
+  let generations = 50000000000;
+	let state = new Array(pad*5).fill(".");
+	for(let i in initial_state){
+		state[pad+Number(i)] = initial_state[i];
+	}
+
+	function update(){
+		let new_state = new Array(state.length).fill(".");
+		for(let i in state){
+			i = Number(i);
+			for(let j in rules){
+				//if(true)console.log(state[i-2]+state[i-1]+state[i-0]+state[i+1]+state[i+2], rules[j][0][0]+rules[j][0][1]+rules[j][0][2]+rules[j][0][3]+rules[j][0][4])
+				j = Number(j);
+
+				if(
+				state[i-2] == rules[j][0][0] &&
+				state[i-1] == rules[j][0][1] &&
+				state[i-0] == rules[j][0][2] &&
+				state[i+1] == rules[j][0][3] &&
+				state[i+2] == rules[j][0][4]
+				){
+					new_state[i] = rules[j][1];
+				}
+			}
+		}
+		state = new_state;
+	}
+
+	function count(){
+		let sum = 0;
+		for(let i in state){
+			if(state[i] == "#")sum += i-pad+(generations-iterateTo);
+		}
+		return sum;
+	}
+
+  let c = document.getElementById("display");
+  c.width = state.length;
+  c.height = iterateTo;
+  let ctx = c.getContext("2d");
+	for(let i = 0; i<iterateTo; i++){
+    update();
+    for(let j in state){
+      if(state[j] == "#")ctx.fillRect(j, i, 1, 1);
+    }
+  }
+	console.log(count());
+</script>

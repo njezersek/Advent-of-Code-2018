@@ -1,0 +1,77 @@
+<script type="text/input" id="initial-state">#.#..#.##.#..#.#..##.######...####.........#..##...####.#.###......#.#.##..#.#.###.#..#.#.####....##</script>
+<script type="text/input" id="rules">.#### => .
+.###. => .
+#.... => .
+##### => .
+..### => #
+####. => #
+..#.. => .
+###.# => .
+..##. => .
+#.##. => #
+#.#.. => .
+##... => .
+..#.# => #
+#.### => #
+.#..# => .
+#...# => #
+.##.# => #
+.#.#. => #
+#..#. => #
+###.. => #
+...#. => .
+.#.## => #
+.##.. => .
+#..## => .
+##.## => .
+.#... => #
+#.#.# => .
+##..# => .
+....# => .
+..... => .
+...## => #
+##.#. => .</script>
+
+<script>
+	let rules = document.getElementById("rules").innerHTML.split("\n").map(a => a.split(" => "));
+	let initial_state = document.getElementById("initial-state").innerHTML;
+	let pad = initial_state.length;
+	let state = new Array(pad*3).fill(".");
+	for(let i in initial_state){
+		state[pad+Number(i)] = initial_state[i];
+	}
+
+	function update(){
+		let new_state = new Array(state.length).fill(".");
+		for(let i in state){
+			i = Number(i);
+			for(let j in rules){
+				//if(true)console.log(state[i-2]+state[i-1]+state[i-0]+state[i+1]+state[i+2], rules[j][0][0]+rules[j][0][1]+rules[j][0][2]+rules[j][0][3]+rules[j][0][4])
+				j = Number(j);
+
+				if(
+				state[i-2] == rules[j][0][0] &&
+				state[i-1] == rules[j][0][1] &&
+				state[i-0] == rules[j][0][2] &&
+				state[i+1] == rules[j][0][3] &&
+				state[i+2] == rules[j][0][4]
+				){
+					new_state[i] = rules[j][1];
+				}
+			}
+		}
+		state = new_state;
+	}
+
+	function count(){
+		let sum = 0;
+		for(let i in state){
+			if(state[i] == "#")sum += i-pad;
+		}
+		return sum;
+	}
+
+	for(let i = 0; i<20; i++)update();
+
+	console.log(count());
+</script>
