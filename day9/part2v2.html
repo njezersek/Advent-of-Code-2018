@@ -1,0 +1,126 @@
+<script>
+    class LinkedListItem{
+      constructor(value){
+        this.value = value;
+        this.before = undefined;
+        this.after = undefined;
+      }
+
+      next(){
+        if(this.after)return this.after;
+        else return this.first();
+      }
+
+      prev(){
+        if(this.before)return this.before;
+        else return this.last();
+      }
+
+      insertBefore(value){
+        let item = new LinkedListItem(value);
+        item.after = this;
+        item.before = this.before;
+        this.before = item;
+      }
+
+      insertAfter(value){
+        let item = new LinkedListItem(value);
+        item.before = this;
+        item.after = this.after;
+        this.after = item;
+      }
+
+      removeAfter(){
+        this.after = this.after.after;
+        delete this.after;
+      }
+
+      removeBefore(){
+        this.before = this.before.before;
+        delete this.before;
+      }
+
+      remove(){
+        if(this.before){
+          if(this.after)this.before.after = this.after;
+          else this.before.after = undefined;
+        }
+        if(this.after){
+          if(this.before)this.after.before = this.before;
+          else this.after.before = undefined;
+        }
+        //delete this;
+      }
+
+      first(){
+        if(!this.before)return this;
+        else return this.before.first();
+      }
+
+      last(){
+        if(!this.after)return this;
+        else return this.after.last();
+      }
+
+      isFirst(){
+        return this.before ? true : false;
+      }
+
+      isLast(){
+        return this.after ? true : false;
+      }
+    }
+
+
+  	players = new Array(464);
+  	players.fill(0);
+
+  	let player = 0;
+  	let end = 71730;
+  	let current = new LinkedListItem(0);
+
+  	for (let i = 1; i < end; i++) {
+  		if ((i) % 23 == 0) {
+  			players[player] += i;
+
+        for(let j=0; j<7; j++){
+          current = current.prev();
+          if(current.isFirst())current = current.prev();
+        }
+        current = current.prev();
+        players[player] += current.value;
+        current = current.next();
+        let tmp = current;
+        current = current.next();
+  			tmp.remove();
+  		}
+  		else {
+  			current = current.next();
+  			//if(current.isFirst())current = current.next();
+  			current.insertAfter(i)
+        current = current.next();
+  		}
+
+  		player = (player + 1) % players.length;
+
+      /*let it = current.first();
+      let out = "";
+  		do{
+        out += it.value + " ";
+      }while(it = it.after)
+      out += " - " + current.value + " - " + i;
+      console.log(out);*/
+  	}
+
+
+  	let result = 0;
+    //std::cout << "\n";
+  	for (let i = 0; i < players.length; i++) {
+      //std::cout << players[i] << " ";
+  		if (players[i] > result)result = players[i];
+  	}
+    //std::cout << "\n";
+  	console.log(result);
+
+
+</script>
