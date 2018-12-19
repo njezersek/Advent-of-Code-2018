@@ -155,6 +155,14 @@
 | | |  | v  |
 \-+-/  \-+--/
   \------/   </script>
+<script type="text/input" id="example2">/>-<\
+|   |
+| /<+-\
+| | | v
+\>+</ |
+  |   ^
+  \<->/
+</script>
 <script>
 	let input = document.getElementById("input").innerHTML.split("\n");
 	let carts = [];
@@ -179,7 +187,10 @@
     }
   }
 
+  input = input.map(a => a.replace(/\^|v/g, '|').replace(/<|>/g, '-'));
+
 	function update(){
+    let ncarts = 0;
     let new_carts = [];
     for(let i=0; i<h; i++){
       if(new_carts[i] == undefined)new_carts[i] = [];
@@ -191,6 +202,7 @@
     for(let i=0; i<h; i++){
       for(let j=0; j<w; j++){
 				if(carts[i][j] != undefined){ // cart found
+          ncarts++;
 					//console.log(i,j, input[i][j]);
 					if(input[i][j] == "+"){ // intersection
 						if(carts[i][j].state == 0){
@@ -232,14 +244,21 @@
 
           //console.log(j,i, "->", jj,ii)
 
-					if(new_carts[ii][jj] != undefined)return {x: jj, y: ii};
-					new_carts[ii][jj] = new_carts[i][j];
+
+          // crash
+					if(new_carts[ii][jj] == undefined){
+  					new_carts[ii][jj] = new_carts[i][j];
+          }
+          else{
+            new_carts[ii][jj] = undefined;
+          }
           new_carts[i][j] = undefined;
 				}
 			}
 		}
+		if(ncarts == 1)return true;
     carts = new_carts;
-		return false;
+    return false;
 	}
 
 	function display(){
@@ -272,5 +291,12 @@
 	while(!r){
 		r = update();
 	}
-	console.log(r);
+
+  for(let i=0; i<input.length; i++){
+    for(let j=0; j<input[i].length; j++){
+      if(carts[i][j] != undefined){
+        console.log(j+","+i)
+      }
+    }
+  }
 </script>
