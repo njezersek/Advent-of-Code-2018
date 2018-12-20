@@ -1,0 +1,22 @@
+<script>
+  let scoreboard = [3,7];
+  let elf1 = 0;
+  let elf2 = 1;
+  let n = "290431";
+
+  let result = 0;
+  for(let i=0; i<50000000; i++){
+    let score = ((+scoreboard[elf1]) + (+scoreboard[elf2]))+"";
+    score = score.split("");
+
+    for(let j=0; j<score.length; j++){
+      scoreboard.push(score[j]);
+    }
+
+    elf1 = (elf1 + (+scoreboard[elf1]) + 1)%scoreboard.length;
+    elf2 = (elf2 + (+scoreboard[elf2]) + 1)%scoreboard.length;
+  }
+  result = scoreboard.join("").indexOf(n);
+
+  console.log(result);
+  </script>
